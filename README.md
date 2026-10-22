@@ -90,7 +90,7 @@ All numbers come from the test suites in this repo, run on an M-series Mac with 
 
 In the default run, YouTube served one real 15 s ad. It never appeared; the shadow player played the video for 11 s around it. With Prevent on, YouTube held 5 of 6 videos at startup, and the shadow covered all five.
 
-This live run predates two later refinements: a pre-buffered shadow now takes over the instant an ad starts, and it warms up ahead of scheduled mid-rolls. A rerun on the release build was blocked when the test machine's connection degraded, and its results will be added here.
+These live numbers come from the build one revision before 1.0.0. Two refinements landed after it: a pre-buffered shadow now takes over the instant an ad starts, and it warms up ahead of scheduled mid-rolls. Their effect is measured on the stand-in player below, not on youtube.com.
 
 **Stand-in YouTube player** (`--project=harness`, no network). Ads are solid red and the video is grayscale, and the player is screenshotted continuously. With Elide on, no test saw a single red frame.
 
