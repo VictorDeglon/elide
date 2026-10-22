@@ -6,7 +6,7 @@
   "license": "MIT",
   "type": "module",
   "scripts": {
-    "test": "node --test test/unit/",
+    "test": "node --test test/unit/*.test.js",
     "test:e2e": "playwright test --project=harness",
     "test:live": "playwright test --project=live",
     "fixtures": "node scripts/fixtures.mjs",
