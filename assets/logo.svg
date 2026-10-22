@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="Elide">
+  <defs>
+    <mask id="elide-cut">
+      <rect width="128" height="128" fill="#fff"/>
+      <rect x="58" y="6" width="11" height="116" fill="#000" transform="rotate(20 64 64)"/>
+    </mask>
+  </defs>
+  <rect width="128" height="128" rx="28" fill="#000"/>
+  <path d="M41 29 L99 64 L41 99 Z" fill="#fff" mask="url(#elide-cut)"/>
+</svg>

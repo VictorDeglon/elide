@@ -1,0 +1,56 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Elide harness</title>
+<style>
+  body { margin: 0; background: #0f0f0f; font: 13px system-ui; color: #fff; }
+  #movie_player { position: relative; width: 640px; height: 360px; background: #000; overflow: hidden; }
+  #movie_player video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }
+  .ytp-ad-player-overlay-layout { position: absolute; left: 0; right: 0; bottom: 0; padding: 8px; display: none; background: rgba(0,0,0,.5); }
+  #movie_player.ad-showing .ytp-ad-player-overlay-layout { display: block; }
+  .ytp-skip-ad-button { position: absolute; right: 12px; bottom: 48px; display: none; padding: 8px 14px; border: 0; background: #fff; color: #000; }
+  #feed { display: flex; gap: 8px; padding: 8px; }
+  #feed > * { display: block; width: 120px; height: 68px; background: #333; }
+</style>
+<script>
+  // What YouTube inlines on a watch page: the player response, with an ad schedule.
+  var ytInitialPlayerResponse = {
+    responseContext: {},
+    playabilityStatus: { status: 'OK' },
+    videoDetails: { videoId: 'elideHarnes', lengthSeconds: '60', isLive: false },
+    adPlacements: [
+      { adPlacementRenderer: { renderer: { clientForecastingAdRenderer: {} } } },
+      { adPlacementRenderer: { config: { adPlacementConfig: { kind: 'AD_PLACEMENT_KIND_START' } }, renderer: { linearAdSequenceRenderer: { linearAds: [] } } } }
+    ],
+    playerAds: [{ playerLegacyDesktopWatchAdsRenderer: {} }],
+    adSlots: [{ adSlotRenderer: {} }],
+    auxiliaryUi: { messageRenderers: { enforcementMessageViewModel: { title: 'Ad blockers are not allowed' } } }
+  };
+  // Mid-roll modes also announce when the break is due, like YouTube's schedule does.
+  (() => {
+    const q = new URLSearchParams(location.search);
+    if (!/^mid/.test(q.get('mode') || '')) return;
+    ytInitialPlayerResponse.adPlacements.push({ adPlacementRenderer: {
+      config: { adPlacementConfig: { kind: 'AD_PLACEMENT_KIND_MILLISECONDS', adTimeOffset: { offsetStartMilliseconds: String(Number(q.get('at') || 4) * 1000), offsetEndMilliseconds: '-1' } } },
+      renderer: { adBreakServiceRenderer: {} }
+    } });
+  })();
+</script>
+</head>
+<body>
+  <div id="movie_player" class="html5-video-player">
+    <div class="html5-video-container"><video class="video-stream html5-main-video" playsinline></video></div>
+    <div class="video-ads ytp-ad-module">
+      <div class="ytp-ad-player-overlay-layout">Sponsored · <span class="ytp-ad-text"></span></div>
+      <button class="ytp-skip-ad-button" id="skip-button:1">Skip</button>
+    </div>
+  </div>
+  <div id="feed">
+    <ytd-rich-item-renderer id="card-normal"><div id="content"><span>video</span></div></ytd-rich-item-renderer>
+    <ytd-rich-item-renderer id="card-ad"><div id="content"><ytd-ad-slot-renderer>sponsored</ytd-ad-slot-renderer></div></ytd-rich-item-renderer>
+    <div id="player-ads">companion ad</div>
+  </div>
+  <script src="/elide-harness/player.js"></script>
+</body>
+</html>

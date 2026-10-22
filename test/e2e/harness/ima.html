@@ -1,0 +1,54 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>IMA harness</title>
+<style>
+  body { margin: 0; background: #111; }
+  #player { position: relative; width: 640px; height: 360px; background: #000; }
+  #content { width: 100%; height: 100%; }
+  #ad { position: absolute; inset: 0; }
+</style>
+</head>
+<body>
+  <!-- A publisher page using Google's real IMA SDK with Google's public sample ad tag. -->
+  <div id="player">
+    <video id="content" muted playsinline src="/media/content.webm"></video>
+    <div id="ad"></div>
+  </div>
+  <script src="https://imasdk.googleapis.com/js/sdkloader/ima3.js"></script>
+  <script>
+    const h = (window.__h = { events: [] });
+    const log = (type, extra = {}) => h.events.push({ type, t: performance.now(), ...extra });
+    const TAG = 'https://pubads.g.doubleclick.net/gampad/ads?iu=/21775744923/external/single_ad_samples&sz=640x480&cust_params=sample_ct%3Dlinear&ciu_szs=300x250%2C728x90&gdfp_req=1&output=vast&unviewed_position_start=1&env=vp&impl=s&correlator=' + Date.now();
+    const content = document.getElementById('content');
+
+    if (!window.google || !google.ima) {
+      log('no-ima');
+      content.play();
+    } else {
+      const container = new google.ima.AdDisplayContainer(document.getElementById('ad'), content);
+      container.initialize();
+      const loader = new google.ima.AdsLoader(container);
+      const fail = (e) => { log('ad-error', { msg: String(e.getError()) }); content.play(); };
+      loader.addEventListener(google.ima.AdErrorEvent.Type.AD_ERROR, fail);
+      loader.addEventListener(google.ima.AdsManagerLoadedEvent.Type.ADS_MANAGER_LOADED, (e) => {
+        const ads = e.getAdsManager(content);
+        const T = google.ima.AdEvent.Type;
+        ads.addEventListener(T.STARTED, (a) => log('ad-start', { duration: a.getAd().getDuration() }));
+        ads.addEventListener(T.COMPLETE, () => log('ad-complete'));
+        ads.addEventListener(T.CONTENT_PAUSE_REQUESTED, () => { log('content-pause'); content.pause(); });
+        ads.addEventListener(T.CONTENT_RESUME_REQUESTED, () => { log('content-resume'); content.play(); });
+        ads.addEventListener(google.ima.AdErrorEvent.Type.AD_ERROR, fail);
+        ads.init(640, 360, google.ima.ViewMode.NORMAL);
+        ads.start();
+      });
+      const req = new google.ima.AdsRequest();
+      req.adTagUrl = TAG;
+      req.linearAdSlotWidth = 640;
+      req.linearAdSlotHeight = 360;
+      loader.requestAds(req);
+    }
+  </script>
+</body>
+</html>

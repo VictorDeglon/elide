@@ -1,0 +1,82 @@
+{
+  "manifest_version": 3,
+  "name": "Elide",
+  "short_name": "Elide",
+  "version": "1.0.0",
+  "description": "Cuts ads out of video so playback stays continuous. YouTube, YouTube Music, Twitch, and IMA video players on any site.",
+  "homepage_url": "https://github.com/VictorDeglon/elide",
+  "minimum_chrome_version": "111",
+  "icons": {
+    "16": "icons/on-16.png",
+    "32": "icons/on-32.png",
+    "48": "icons/on-48.png",
+    "128": "icons/on-128.png"
+  },
+  "action": {
+    "default_title": "Elide",
+    "default_popup": "popup/popup.html",
+    "default_icon": {
+      "16": "icons/on-16.png",
+      "32": "icons/on-32.png"
+    }
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "permissions": [
+    "storage",
+    "scripting",
+    "declarativeNetRequest"
+  ],
+  "host_permissions": [
+    "*://*.youtube.com/*",
+    "*://*.youtube-nocookie.com/*",
+    "*://*.twitch.tv/*"
+  ],
+  "optional_host_permissions": [
+    "<all_urls>"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "*://*.youtube.com/*",
+        "*://*.youtube-nocookie.com/*"
+      ],
+      "js": [
+        "shared/defaults.js",
+        "content/engine.js",
+        "content/sites/youtube.js",
+        "content/boot.js"
+      ],
+      "css": [
+        "content/elide.css"
+      ],
+      "run_at": "document_start",
+      "all_frames": true
+    },
+    {
+      "matches": [
+        "*://*.twitch.tv/*"
+      ],
+      "js": [
+        "shared/defaults.js",
+        "content/engine.js",
+        "content/sites/twitch.js",
+        "content/boot.js"
+      ],
+      "css": [
+        "content/elide.css"
+      ],
+      "run_at": "document_start"
+    }
+  ],
+  "declarative_net_request": {
+    "rule_resources": [
+      {
+        "id": "shield",
+        "enabled": true,
+        "path": "rules/shield.json"
+      }
+    ]
+  }
+}

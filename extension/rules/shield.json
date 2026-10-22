@@ -1,0 +1,63 @@
+[
+  {
+    "id": 1,
+    "priority": 1,
+    "action": {
+      "type": "block"
+    },
+    "condition": {
+      "requestDomains": [
+        "doubleclick.net",
+        "googlesyndication.com",
+        "googleadservices.com",
+        "adservice.google.com",
+        "amazon-adsystem.com",
+        "adnxs.com",
+        "adsrvr.org",
+        "criteo.com",
+        "criteo.net",
+        "taboola.com",
+        "outbrain.com",
+        "pubmatic.com",
+        "rubiconproject.com",
+        "openx.net",
+        "casalemedia.com",
+        "indexww.com",
+        "moatads.com",
+        "adform.net",
+        "smartadserver.com",
+        "teads.tv",
+        "spotxchange.com",
+        "spotx.tv",
+        "springserve.com",
+        "sharethrough.com",
+        "33across.com",
+        "yieldmo.com",
+        "bidswitch.net",
+        "serving-sys.com",
+        "flashtalking.com",
+        "innovid.com",
+        "adcolony.com",
+        "media.net",
+        "zedo.com",
+        "revcontent.com",
+        "mgid.com"
+      ],
+      "excludedInitiatorDomains": [
+        "youtube.com",
+        "youtube-nocookie.com",
+        "twitch.tv",
+        "hulu.com"
+      ],
+      "resourceTypes": [
+        "script",
+        "xmlhttprequest",
+        "sub_frame",
+        "image",
+        "media",
+        "ping",
+        "other"
+      ]
+    }
+  }
+]

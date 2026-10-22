@@ -1,0 +1,133 @@
+/* Elide · curtain + clean feed. Injected into supported pages. */
+
+.elide-curtain {
+  position: absolute !important;
+  inset: 0 !important;
+  z-index: 2147483000 !important;
+  background: #000 !important;
+  opacity: 1;
+  transition: opacity 160ms linear;
+  contain: strict;
+  cursor: default;
+  pointer-events: auto !important;
+}
+.elide-curtain[data-out] {
+  opacity: 0;
+  pointer-events: none !important;
+}
+.elide-curtain > canvas,
+.elide-curtain > img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+/* Shadow player layer: rendered but invisible while warm, above everything when live. */
+.elide-shadow {
+  position: absolute !important;
+  inset: 0 !important;
+  opacity: 0;
+  pointer-events: none !important;
+  background: #000;
+  transition: opacity 180ms linear;
+}
+.elide-shadow > iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  pointer-events: none;
+}
+.elide-shadow[data-live] {
+  z-index: 2147483001 !important;
+  opacity: 1;
+  pointer-events: auto !important;
+}
+.elide-curtain > .elide-tag {
+  position: absolute;
+  left: 14px;
+  bottom: 14px;
+  z-index: 2;
+  padding: 5px 8px;
+  background: rgba(0, 0, 0, 0.72);
+  color: #fff;
+  font: 500 10px/1 ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.elide-curtain > .elide-bar {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 2;
+  height: 2px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.14);
+}
+.elide-curtain > .elide-bar::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 28%;
+  background: #fff;
+  animation: elide-sweep 900ms cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+@keyframes elide-sweep {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(460%); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .elide-curtain > .elide-bar::after { animation: none; width: 100%; opacity: 0.5; }
+}
+
+/* ---- Clean feed: YouTube (desktop) ---- */
+html.elide-clean ytd-ad-slot-renderer,
+html.elide-clean ytd-in-feed-ad-layout-renderer,
+html.elide-clean ytd-display-ad-renderer,
+html.elide-clean ytd-promoted-sparkles-web-renderer,
+html.elide-clean ytd-promoted-video-renderer,
+html.elide-clean ytd-compact-promoted-video-renderer,
+html.elide-clean ytd-banner-promo-renderer,
+html.elide-clean ytd-statement-banner-renderer,
+html.elide-clean ytd-video-masthead-ad-v3-renderer,
+html.elide-clean ytd-primetime-promo-renderer,
+html.elide-clean ytd-search-pyv-renderer,
+html.elide-clean ytd-companion-slot-renderer,
+html.elide-clean ytd-action-companion-ad-renderer,
+html.elide-clean ytd-merch-shelf-renderer,
+html.elide-clean ytd-brand-video-singleton-renderer,
+html.elide-clean ytd-brand-video-shelf-renderer,
+html.elide-clean ytd-mealbar-promo-renderer,
+html.elide-clean ytd-rich-item-renderer:has(> #content > ytd-ad-slot-renderer),
+html.elide-clean ytd-rich-section-renderer:has(ytd-statement-banner-renderer),
+html.elide-clean ytd-engagement-panel-section-list-renderer[target-id="engagement-panel-ads"],
+html.elide-clean #masthead-ad,
+html.elide-clean #player-ads,
+html.elide-clean tp-yt-paper-dialog:has(ytd-mealbar-promo-renderer),
+html.elide-clean tp-yt-paper-dialog:has(ytd-enforcement-message-view-model),
+/* player overlays: banner ads, product cards, paid-promotion label */
+html.elide-clean .ytp-ad-overlay-container,
+html.elide-clean .ytp-ad-overlay-slot,
+html.elide-clean .ytp-ad-image-overlay,
+html.elide-clean .ytp-ad-text-overlay,
+html.elide-clean .ytp-featured-product,
+html.elide-clean .ytp-paid-content-overlay,
+/* ---- mobile web ---- */
+html.elide-clean ytm-promoted-sparkles-web-renderer,
+html.elide-clean ytm-promoted-video-renderer,
+html.elide-clean ytm-companion-ad-renderer,
+html.elide-clean ytm-companion-slot,
+html.elide-clean ytm-statement-banner-renderer,
+html.elide-clean ytm-mealbar-promo-renderer,
+html.elide-clean ytm-paid-content-overlay-renderer,
+html.elide-clean ad-slot-renderer,
+html.elide-clean ytm-rich-item-renderer:has(ad-slot-renderer),
+/* ---- YouTube Music ---- */
+html.elide-clean ytmusic-mealbar-promo-renderer,
+html.elide-clean ytmusic-statement-banner-renderer {
+  display: none !important;
+}

@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Elide</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <header class="top">
+    <div class="brand">
+      <svg class="mark" viewBox="0 0 128 128" aria-hidden="true">
+        <mask id="cut"><rect width="128" height="128" fill="#fff"/><rect x="58" y="6" width="12" height="116" fill="#000" transform="rotate(20 64 64)"/></mask>
+        <path d="M30 18 L110 64 L30 110 Z" fill="currentColor" mask="url(#cut)"/>
+      </svg>
+      <span class="word">elide</span>
+    </div>
+    <label class="sw" title="Elide on/off">
+      <input type="checkbox" data-key="enabled" aria-label="Elide on or off">
+      <span></span>
+    </label>
+  </header>
+
+  <section class="tab" aria-live="polite">
+    <div class="tab-line"><span id="tab-site">—</span><span id="tab-state" class="dim"></span></div>
+    <div id="tab-last" class="dim small"></div>
+  </section>
+
+  <section class="stats">
+    <div><b id="st-cut">0</b><span>ads handled</span></div>
+    <div><b id="st-relayed">0</b><span>played around</span></div>
+    <div><b id="st-prevented">0</b><span>prevented</span></div>
+  </section>
+  <p id="st-blank" class="dim small blank"></p>
+
+  <section class="group" aria-labelledby="h-engine">
+    <h2 id="h-engine">Engine</h2>
+    <label class="row"><span><b>Prevent</b><i>Strip ad schedules from YouTube's player data</i></span><span class="sw"><input type="checkbox" data-key="prevent"><span></span></span></label>
+    <label class="row"><span><b>Curtain</b><i>Cover a running ad with the last frame, muted</i></span><span class="sw"><input type="checkbox" data-key="curtain"><span></span></span></label>
+    <label class="row"><span><b>Cut</b><i>End ads under the curtain: skip, seek, 16×</i></span><span class="sw"><input type="checkbox" data-key="cut"><span></span></span></label>
+    <label class="row"><span><b>Relay</b><i>Shadow player keeps the video going during holds</i></span><span class="sw"><input type="checkbox" data-key="relay"><span></span></span></label>
+    <label class="row"><span><b>Clean feed</b><i>Hide sponsored cards, banners, overlays</i></span><span class="sw"><input type="checkbox" data-key="cleanFeed"><span></span></span></label>
+    <label class="row"><span><b>Shield</b><i>Block ad networks (not on YouTube or Twitch)</i></span><span class="sw"><input type="checkbox" data-key="shield"><span></span></span></label>
+    <label class="row"><span><b>Label</b><i>Small tag on the curtain while it works</i></span><span class="sw"><input type="checkbox" data-key="indicator"><span></span></span></label>
+  </section>
+
+  <section class="group" aria-labelledby="h-sites">
+    <h2 id="h-sites">Sites</h2>
+    <label class="row"><span><b>YouTube</b><i>Watch, Shorts, Music, embeds, mobile web</i></span><span class="sw"><input type="checkbox" data-key="site_youtube"><span></span></span></label>
+    <label class="row"><span><b>Twitch</b><i>Curtain over stitched ad breaks</i></span><span class="sw"><input type="checkbox" data-key="site_twitch"><span></span></span></label>
+    <label class="row"><span><b>Any site</b><i>IMA, video.js and JW Player ads · asks permission</i></span><span class="sw"><input type="checkbox" data-key="site_any" data-origins="&lt;all_urls&gt;"><span></span></span></label>
+    <label class="row"><span><b>Hulu</b><i>Experimental, untested · asks permission</i></span><span class="sw"><input type="checkbox" data-key="site_hulu" data-origins="*://*.hulu.com/*"><span></span></span></label>
+  </section>
+
+  <footer class="foot">
+    <button id="restore" type="button">Restore player</button>
+    <a id="repo" href="https://github.com/VictorDeglon/elide" target="_blank" rel="noopener"><span id="version"></span> · source</a>
+  </footer>
+
+  <script src="../shared/defaults.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>

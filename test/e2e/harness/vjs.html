@@ -1,0 +1,37 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>video.js harness</title>
+<style>
+  body { margin: 0; background: #111; }
+  .video-js { position: relative; width: 640px; height: 360px; background: #000; }
+  .vjs-tech { width: 100%; height: 100%; }
+</style>
+</head>
+<body>
+  <!-- Stand-in for a video.js player with contrib-ads: the ad plays in the content <video>
+       while the player carries `vjs-ad-playing`, then the content resumes where it was. -->
+  <div class="video-js" id="player"><video class="vjs-tech" playsinline></video></div>
+  <script>
+    const box = document.getElementById('player');
+    const video = box.querySelector('video');
+    const h = (window.__h = { events: [] });
+    const log = (type, extra = {}) => h.events.push({ type, t: performance.now(), ...extra });
+    function load(src, then) {
+      video.src = src;
+      video.play().catch(() => {});
+      video.addEventListener('loadedmetadata', () => { video.play().catch(() => {}); then && then(); }, { once: true });
+    }
+    box.classList.add('vjs-ad-playing');
+    log('ad-start');
+    load('/media/ad15.webm');
+    video.addEventListener('ended', () => {
+      if (!box.classList.contains('vjs-ad-playing')) return;
+      box.classList.remove('vjs-ad-playing');
+      log('ad-ended');
+      load('/media/content.webm', () => video.requestVideoFrameCallback(() => log('content-frame')));
+    });
+  </script>
+</body>
+</html>

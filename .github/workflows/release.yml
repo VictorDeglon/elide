@@ -1,0 +1,31 @@
+name: release
+
+# Push a tag like v1.2.3 (matching extension/manifest.json) to publish a release with the
+# load-unpacked zip and its checksum attached.
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Tag matches manifest version
+        run: test "v$(node -p "require('./extension/manifest.json').version")" = "$GITHUB_REF_NAME"
+      - run: npm run build
+      - name: Publish
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1; then
+            gh release upload "$GITHUB_REF_NAME" dist/*.zip dist/*.sha256 --clobber
+          else
+            gh release create "$GITHUB_REF_NAME" dist/*.zip dist/*.sha256 --title "Elide $GITHUB_REF_NAME" --generate-notes
+          fi
